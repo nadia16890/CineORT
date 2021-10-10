@@ -45,6 +45,16 @@ namespace CineORT.Controllers
             return View();
         }
 
+        private bool ValidarUsuario(Usuario usuario)
+        {
+            var listaUsuarios = _context.Usuarios.ToList();
+            bool encontrado = listaUsuarios
+                .Where(a => a.Email != null)
+                .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
+
+            return encontrado;
+        }
+
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -54,9 +64,18 @@ namespace CineORT.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
+                if (!ValidarUsuario(usuario))
+                {
+                    _context.Add(usuario);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Error = "Usuario Existente";
+                }
+                
             }
             return View(usuario);
         }
@@ -84,16 +103,17 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,NombreApellido,Email,Contraseña")] Usuario usuario)
         {
-            if (id != usuario.Id)
-            {
-                return NotFound();
-            }
+            
 
             if (ModelState.IsValid)
             {
+                if (!ValidarUsuario(usuario))
+                {
                 try
                 {
-                    _context.Update(usuario);
+                        var usuarioBD = _context.Usuarios.FirstOrDefault(o => o.Id == usuario.Id);
+                        usuarioBD.Email = usuario.Email;
+                    _context.Update(usuarioBD);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -104,10 +124,19 @@ namespace CineORT.Controllers
                     }
                     else
                     {
+
+
                         throw;
                     }
                 }
                 return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    ViewBag.Error = "Usuario Existente";
+                    return View(usuario);
+                }
             }
             return View(usuario);
         }
