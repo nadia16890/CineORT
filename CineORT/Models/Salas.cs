@@ -7,5 +7,9 @@ namespace CineORT.Models
 {
     public class Salas
     {
+
+        public int numero { get; set; }
+
+        public Funcion funcionActual { get; set; }
     }
 }
