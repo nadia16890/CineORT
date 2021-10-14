@@ -21,11 +21,26 @@ namespace CineORT.Controllers
             return View(await _context.Usuarios.ToListAsync());
         }
 
-        public async Task<IActionResult> LoginUsuario()
+        public IActionResult LoginUsuario()
         {
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult LoginUsuario([Bind("Email,Contraseña")] Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (!ValidarUsuario(usuario))
+                {
+                    ViewBag.Error = "Usuario Inexistente";
+                }
+                
+            }
+            return View(usuario);
+        }
         // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {

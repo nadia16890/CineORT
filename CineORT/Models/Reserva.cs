@@ -6,18 +6,10 @@ using System.Threading.Tasks;
 
 namespace CineORT.Models
 {
-    public class Funcion
-
+    public class Reserva
     {
         [Key]
         public int Id { get; set; }
-        public Pelicula Pelicula { get; set; }
-
-        public int LugaresDisponibles { get; set; }
-
-        public string Fecha { get; set; }
-
-        public string Horario { get; set; }
-
+        public Funcion Funcion { get; set; }
     }
 }

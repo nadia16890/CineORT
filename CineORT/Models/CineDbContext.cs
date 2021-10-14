@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CineORT.Models;
 
 namespace CineORT.Models
 {
@@ -17,6 +18,8 @@ namespace CineORT.Models
             public DbSet<Usuario> Usuarios { get; set; }
 
         public DbSet<Administrador> Administradors { get; set; }
+
+        public DbSet<CineORT.Models.Reserva> Reserva { get; set; }
 
 
     }
