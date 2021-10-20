@@ -22,7 +22,7 @@ namespace CineORT
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<CineDbContext>(options => options.UseSqlite(@"filename=C:\Users\nadia\Desktop\CineORT\Usuarios.db"));
+            services.AddDbContext<CineDbContext>(options => options.UseSqlite(@"filename=C:\Temporal\Usuarios.db"));
 
         }
 
