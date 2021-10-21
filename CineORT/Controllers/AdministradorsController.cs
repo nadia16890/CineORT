@@ -47,6 +47,16 @@ namespace CineORT.Controllers
         {
             return View();
         }
+        private bool ValidarAdministradors(Administrador administradors)
+        {
+            var listaAdministrador = _context.Administradors.ToList();
+            bool encontrado = listaAdministrador
+                .Where(a => a.Email != null)
+                .Any(usu => usu.Email.Equals(administradors.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != administradors.Id);
+
+            return encontrado;
+        }
+
 
         // POST: Administradors/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -55,17 +65,24 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Email,Contrasenia")] Administrador administrador)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(administrador);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(administrador);
-        }
 
-        // GET: Administradors/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+            
+                if (!ValidarAdministradors(administrador))
+                {
+                    _context.Add(administrador);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Error = "Administrador Existente";
+                }
+                return View(administrador);
+            }
+
+
+            // GET: Administradors/Edit/5
+            public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -87,33 +104,49 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Email,Contrasenia")] Administrador administrador)
         {
-            if (id != administrador.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
-                try
+
+
+                if (id != administrador.Id)
                 {
-                    _context.Update(administrador);
-                    await _context.SaveChangesAsync();
+
+
+
+
+                    try
+                    {
+
+                        var administradorBD = _context.Administradors.FirstOrDefault(o => o.Id == administrador.Id);
+                        administradorBD.Email = administrador.Email;
+                        _context.Update(administradorBD);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AdministradorExists(administrador.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!AdministradorExists(administrador.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ViewBag.Error = "Administrador Existente";
+                    return View(administrador);
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(administrador);
         }
+
+
+
 
         // GET: Administradors/Delete/5
         public async Task<IActionResult> Delete(int? id)
