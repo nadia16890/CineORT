@@ -21,6 +21,8 @@ namespace CineORT.Models
 
         public DbSet<CineORT.Models.Reserva> Reserva { get; set; }
 
+        public DbSet<CineORT.Models.Pelicula> Pelicula { get; set; }
+
 
     }
 
