@@ -1,5 +1,39 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CineORT.Models.Administrador
+
 @{
+    ViewData["Title"] = "LoginAdministrador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Acceso Administradores</h1>
+
+
+<h4>Por favor, ingresá tu usuario y contraseña:</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LoginUsuario">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contrasenia" class="control-label"></label>
+                <input asp-for="Contrasenia" class="form-control" />
+                <span asp-validation-for="Contrasenia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a asp-action="Index" asp-controller="Administrador"><input type="button" value="Ingresar" class="btn btn-primary" /></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
