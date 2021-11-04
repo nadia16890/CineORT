@@ -18,6 +18,11 @@ namespace CineORT.Controllers
             _context = context;
         }
 
+        public IActionResult MenuPrincipalAdministrador()
+        {
+            return View();
+        }
+
         // GET: Administradors
         public async Task<IActionResult> Index()
         {
@@ -72,7 +77,7 @@ namespace CineORT.Controllers
                 var listaAdministrador = _context.Administradors.ToList();
                 bool encontrado = listaAdministrador
                     .Where(a => a.Email != null)
-                    .Any(usu => usu.Email.Equals(administrador.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != administrador.Id);
+                    .Any(admin => admin.Email.Equals(administrador.Email, System.StringComparison.OrdinalIgnoreCase) && admin.Id != administrador.Id);
 
                 return encontrado;
             }
