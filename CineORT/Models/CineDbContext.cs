@@ -23,6 +23,8 @@ namespace CineORT.Models
 
         public DbSet<CineORT.Models.Pelicula> Pelicula { get; set; }
 
+        public DbSet<CineORT.Models.Funcion> Funcion { get; set; }
+
 
     }
 

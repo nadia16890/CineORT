@@ -11,8 +11,7 @@ namespace CineORT.Models
 
         [Key]
         public int id { get; set; }
-        public int numero { get; set; }
-
-        public Funcion funcionActual { get; set; }
+        
+        public int CantidadLugares { get; set; }
     }
 }
