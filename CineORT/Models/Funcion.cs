@@ -16,9 +16,9 @@ namespace CineORT.Models
 
         public string Horario { get; set; }
 
-        public Salas Sala { get; set; }
+        public int Sala { get; set; }
 
-        public Pelicula Pelicula { get; set; }
+        public string NombrePelicula { get; set; }
 
     }
 }

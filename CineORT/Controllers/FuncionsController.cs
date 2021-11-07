@@ -7,11 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
 
+
+
 namespace CineORT.Controllers
 {
     public class FuncionsController : Controller
     {
         private readonly CineDbContext _context;
+
+        
 
         public FuncionsController(CineDbContext context)
         {
@@ -48,18 +52,38 @@ namespace CineORT.Controllers
             return View();
         }
 
+        private bool ValidarPelicula(Funcion funcion)
+        {
+            var listaPeliculas = _context.Pelicula.ToList();
+            bool encontrado = listaPeliculas
+                .Where(a => a.Nombre != null)
+                .Any(peli => peli.Nombre.Equals(funcion.NombrePelicula, System.StringComparison.OrdinalIgnoreCase));
+
+            
+            return encontrado;
+        }
         // POST: Funcions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Fecha,Horario")] Funcion funcion)
+        public async Task<IActionResult> Create([Bind("Id,Fecha,Horario,Sala,NombrePelicula")] Funcion funcion)
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(funcion);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ValidarPelicula(funcion))
+                {
+                   
+                    _context.Add(funcion);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Error = "Película Inexistente";
+                }
+                
             }
             return View(funcion);
         }
