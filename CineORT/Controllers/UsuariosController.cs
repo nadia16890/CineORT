@@ -18,7 +18,7 @@ namespace CineORT.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Usuarios.ToListAsync());
+            return View(await _context.Cliente.ToListAsync());
         }
 
         public IActionResult LoginUsuario()
@@ -28,7 +28,7 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario([Bind("Email,Contraseña")] Usuario usuario)
+        public IActionResult LoginUsuario(Cliente usuario)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
+            var usuario = await _context.Cliente
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
@@ -65,9 +65,9 @@ namespace CineORT.Controllers
             return View();
         }
 
-        private bool ValidarUsuario(Usuario usuario)
+        private bool ValidarUsuario(Cliente usuario)
         {
-            var listaUsuarios = _context.Usuarios.ToList();
+            var listaUsuarios = _context.Cliente.ToList();
             bool encontrado = listaUsuarios
                 .Where(a => a.Email != null)
                 .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
@@ -80,7 +80,7 @@ namespace CineORT.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NombreApellido,Email,Contraseña")] Usuario usuario)
+        public async Task<IActionResult> Create(Cliente usuario)
         {
             if (ModelState.IsValid)
             {
@@ -108,7 +108,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario = await _context.Cliente.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
@@ -121,7 +121,7 @@ namespace CineORT.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NombreApellido,Email,Contraseña")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, Cliente usuario)
         {
             
 
@@ -131,7 +131,7 @@ namespace CineORT.Controllers
                 {
                 try
                 {
-                        var usuarioBD = _context.Usuarios.FirstOrDefault(o => o.Id == usuario.Id);
+                        var usuarioBD = _context.Cliente.FirstOrDefault(o => o.Id == usuario.Id);
                         usuarioBD.Email = usuario.Email;
                     _context.Update(usuarioBD);
                     await _context.SaveChangesAsync();
@@ -169,7 +169,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuarios
+            var usuario = await _context.Cliente
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
@@ -184,15 +184,15 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            _context.Usuarios.Remove(usuario);
+            var usuario = await _context.Cliente.FindAsync(id);
+            _context.Cliente.Remove(usuario);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UsuarioExists(int id)
         {
-            return _context.Usuarios.Any(e => e.Id == id);
+            return _context.Cliente.Any(e => e.Id == id);
         }
     }
 }

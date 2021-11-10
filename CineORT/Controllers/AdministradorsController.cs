@@ -136,7 +136,7 @@ namespace CineORT.Controllers
                     {
                         try
                         {
-                            var usuarioBD = _context.Usuarios.FirstOrDefault(o => o.Id == administrador.Id);
+                            var usuarioBD = _context.Administradors.FirstOrDefault(o => o.Id == administrador.Id);
                             usuarioBD.Email = administrador.Email;
                             _context.Update(usuarioBD);
                             await _context.SaveChangesAsync();

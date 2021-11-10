@@ -40,7 +40,7 @@ namespace CineORT.Controllers
         public static Usuario ObtenerUsuario(CineDbContext _context, string email, string password)
         {
 
-            Usuario usuario = _context.Clientes.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
+            Usuario usuario = _context.Cliente.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
             if (usuario == null)
                 usuario = _context.Administradors.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
             return usuario;
@@ -114,14 +114,14 @@ namespace CineORT.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult NoAutorizado()
-        {
-            return View();
-        }
+      //  [Authorize]
+     //   [HttpGet]
+      //  public IActionResult NoAutorizado()
+      //  {
+     //       return View();
+      //  }
 
 
     }
 }
-}
+
