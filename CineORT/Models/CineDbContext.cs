@@ -15,7 +15,7 @@ namespace CineORT.Models
             {
 
             }
-        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         public DbSet<Administrador> Administradors { get; set; }
 

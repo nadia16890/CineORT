@@ -1,4 +1,5 @@
 using CineORT.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace CineORT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(ConfiguracionCookie);
+
             services.AddControllersWithViews();
 
             services.AddDbContext<CineDbContext>(options => options.UseSqlite(@"filename=C:\Temporal\Usuarios.db"));
@@ -44,6 +47,8 @@ namespace CineORT
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -52,6 +57,15 @@ namespace CineORT
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseCookiePolicy();
+        }
+
+        public static void ConfiguracionCookie(CookieAuthenticationOptions opciones)
+        {
+            opciones.LoginPath = "/Login/Login";
+            opciones.AccessDeniedPath = "/Login/NoAutorizado";
+            opciones.LogoutPath = "/Login/Logout";
         }
     }
 }

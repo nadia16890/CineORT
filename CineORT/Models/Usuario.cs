@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CineORT.Models
 {
     [Table("Usuarios")]
-    public class Usuario
+    public abstract class Usuario
     {
         [Key]
         public int Id { get; set; }
@@ -20,7 +20,9 @@ namespace CineORT.Models
         public string Email { get; set; }
 
         [Required]
-        public string Contraseña { get; set; }
+        public string Contrasenia { get; set; }
+
+        public abstract TipoUsuario TipoUsuario { get; }
 
     }
 }
