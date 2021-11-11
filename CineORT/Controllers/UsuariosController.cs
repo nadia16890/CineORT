@@ -87,9 +87,13 @@ namespace CineORT.Controllers
                 
                 if (!ValidarUsuario(usuario))
                 {
-                    _context.Add(usuario);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    
+                        _context.Cliente.Add(usuario);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    
+                    
+                    
                 }
                 else
                 {

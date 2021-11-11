@@ -26,7 +26,7 @@ namespace CineORT.Controllers
         // GET: Administradors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Administradors.ToListAsync());
+            return View(await _context.Administrador.ToListAsync());
         }
         public IActionResult LoginAdministradors()
         {
@@ -57,7 +57,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var administrador = await _context.Administradors
+            var administrador = await _context.Administrador
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (administrador == null)
             {
@@ -74,7 +74,7 @@ namespace CineORT.Controllers
         }
             private bool ValidarAdministradors(Administrador administrador)
             {
-                var listaAdministrador = _context.Administradors.ToList();
+                var listaAdministrador = _context.Administrador.ToList();
                 bool encontrado = listaAdministrador
                     .Where(a => a.Email != null)
                     .Any(admin => admin.Email.Equals(administrador.Email, System.StringComparison.OrdinalIgnoreCase) && admin.Id != administrador.Id);
@@ -115,7 +115,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var administrador = await _context.Administradors.FindAsync(id);
+            var administrador = await _context.Administrador.FindAsync(id);
             if (administrador == null)
             {
                 return NotFound();
@@ -136,7 +136,7 @@ namespace CineORT.Controllers
                     {
                         try
                         {
-                            var usuarioBD = _context.Administradors.FirstOrDefault(o => o.Id == administrador.Id);
+                            var usuarioBD = _context.Administrador.FirstOrDefault(o => o.Id == administrador.Id);
                             usuarioBD.Email = administrador.Email;
                             _context.Update(usuarioBD);
                             await _context.SaveChangesAsync();
@@ -175,7 +175,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var administrador = await _context.Administradors
+            var administrador = await _context.Administrador
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (administrador == null)
             {
@@ -190,15 +190,15 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var administrador = await _context.Administradors.FindAsync(id);
-            _context.Administradors.Remove(administrador);
+            var administrador = await _context.Administrador.FindAsync(id);
+            _context.Administrador.Remove(administrador);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
             private bool AdministradorExists(int id)
         {
-            return _context.Administradors.Any(e => e.Id == id);
+            return _context.Administrador.Any(e => e.Id == id);
         }
     }
 }

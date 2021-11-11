@@ -34,7 +34,7 @@
                 <input name="rol" type="radio" value="@TipoUsuario.Cliente" /> @TipoUsuario.Cliente.ToString()
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Create" asp-controller="Reserva"><input type="submit" value="Crear Usuario" class="btn btn-primary" /></a>
             </div>
         </form>
     </div>

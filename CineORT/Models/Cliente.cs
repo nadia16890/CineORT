@@ -9,6 +9,8 @@ namespace CineORT.Models
     [Table("Cliente")]
     public class Cliente : Usuario
     {
+
+        
         public override TipoUsuario TipoUsuario => TipoUsuario.Cliente;
     }
 }

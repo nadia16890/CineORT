@@ -19,7 +19,7 @@ namespace CineORT.Models
         
         public DbSet<CineORT.Models.Cliente> Cliente { get; set; }
 
-        public DbSet<CineORT.Models.Administrador> Administradors { get; set; }
+        public DbSet<CineORT.Models.Administrador> Administrador { get; set; }
 
         public DbSet<CineORT.Models.Reserva> Reserva { get; set; }
 

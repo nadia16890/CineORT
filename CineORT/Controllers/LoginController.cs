@@ -42,7 +42,7 @@ namespace CineORT.Controllers
 
             Usuario usuario = _context.Cliente.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
             if (usuario == null)
-                usuario = _context.Administradors.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
+                usuario = _context.Administrador.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
             return usuario;
         }
 
