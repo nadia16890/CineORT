@@ -1,4 +1,6 @@
-﻿@{
+﻿
+@{
+   
     ViewData["Title"] = "LoginUsuario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -9,6 +11,7 @@
 
 <hr />
 
+
 <div class="row">
     <div class="col-lg-offset-4 col-md-4">
         <form method="post" asp-action="Login">
@@ -16,17 +19,17 @@
                 @ViewBag.Error
             </div>
             <div class="form-group">
-                    <label laber-for="rol" class="control-label">Rol:</label>
-                    <input name="rol" type="radio" value="@TipoUsuario.Administrador" /> @TipoUsuario.Administrador.ToString()
-                    <input name="rol" type="radio" value="@TipoUsuario.Cliente" /> @TipoUsuario.Cliente.ToString()
-                </div>
+                <label laber-for="rol" class="control-label">TipoUsuario:</label>
+                <input name="rol" type="radio" value="@TipoUsuario.Administrador" /> @TipoUsuario.Administrador.ToString()
+                <input name="rol" type="radio" value="@TipoUsuario.Cliente" /> @TipoUsuario.Cliente.ToString()
+            </div>
             <div class="form-group">
                 <label laber-for="email" class="control-label">Email:</label>
                 <input name="email" class="form-control" type="text" value="@ViewBag.Email" />
             </div>
             <div class="form-group">
-                <label label-for="Password" class="control-label">Contraseña:</label>
-                <input name="password" class="form-control" type="password" />
+                <label label-for="Contrasenia" class="control-label">Contaseña:</label>
+                <input name="contraseña" class="form-control" type="password" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-success" />

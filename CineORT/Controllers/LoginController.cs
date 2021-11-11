@@ -37,7 +37,7 @@ namespace CineORT.Controllers
         }
 
 
-        public static Usuario ObtenerUsuario(CineDbContext _context, string email, string password)
+        private Usuario ObtenerUsuario(CineDbContext _context, string email, string password)
         {
 
             Usuario usuario = _context.Cliente.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
