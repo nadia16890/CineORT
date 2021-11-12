@@ -57,7 +57,7 @@ namespace CineORT.Controllers
 
             }
 
-            return RedirectToAction(nameof(ReservasController.Create), "Create");
+            return View();
         }
 
 
@@ -101,16 +101,17 @@ namespace CineORT.Controllers
                 {                 
                         _context.Usuarios.Add(usuario);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
-                           
+                        return RedirectToAction(nameof(ReservasController.Create));
+
                 }
                 else
                 {
                     ViewBag.Error = "Usuario Existente";
+                    return View(usuario);
                 }
                 
             }
-            return View(usuario);
+            return View();
         }
 
         // GET: Usuarios/Edit/5

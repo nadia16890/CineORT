@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CineORT.Controllers
 {
-   // [Authorize(TipoUsuario = nameof(TipoUsuario.Administrador))]
-    public class FuncionsController : Controller
+      public class FuncionsController : Controller
     {
         private readonly CineDbContext _context;
 

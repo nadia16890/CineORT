@@ -99,7 +99,7 @@ namespace CineORT.Controllers
                     {
                         _context.Add(administrador);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(MenuPrincipalAdministrador));
                     }
                     else
                     {
