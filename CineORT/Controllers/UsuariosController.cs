@@ -6,6 +6,7 @@ using CineORT.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CineORT.Controllers
 {
@@ -13,6 +14,7 @@ namespace CineORT.Controllers
     {
         private readonly CineDbContext _context;
 
+        private const string _Return_Url = "ReturnUrl";
         public UsuariosController(CineDbContext context)
         {
             _context = context;
@@ -21,27 +23,40 @@ namespace CineORT.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Usuario.ToListAsync());
+            return View(await _context.Usuarios.ToListAsync());
         }
 
-        public IActionResult LoginUsuario()
+        [HttpGet]
+        public IActionResult LoginUsuario(string returnUrl)
         {
+            TempData[_Return_Url] = returnUrl;
             return View();
         }
 
+        private Usuario ObtenerUsuario(CineDbContext _context, string email, string password)
+         {
+
+        Usuario usuario = _context.Usuarios.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
+         
+        return usuario;
+         }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario(Usuario usuario)
+        //[ValidateAntiForgeryToken]
+        public IActionResult LoginUsuario(string email, string password)
         {
-            if (ModelState.IsValid)
-            {
+            string returnUrl = TempData[_Return_Url] as string;
+            
 
-                if (!ValidarUsuario(usuario))
+               // if (!ValidarUsuario(usuario))
+               // {
+                 //   ViewBag.Error = "Usuario Inexistente";
+               // }
+
+                var usuario = ObtenerUsuario(_context, email, password);
+                if (usuario != null)
                 {
-                    ViewBag.Error = "Usuario Inexistente";
-                }
-
-                // Se crean las credenciales del usuario que serán incorporadas al contexto
+                 // Se crean las credenciales del usuario que serán incorporadas al contexto
                 ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
                 // El lo que luego obtendré al acceder a User.Identity.Name
@@ -65,10 +80,22 @@ namespace CineORT.Controllers
 
                 TempData["LoggedIn"] = true;
 
-                return RedirectToAction(nameof(ReservasController.Create), "Reservar");
+                    return Redirect(returnUrl);
+
+                    
             }
-            return View(usuario);
+            
+            return View();
         }
+
+
+        [Authorize]
+             public IActionResult Logout()
+          {
+        
+              return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
         // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -77,7 +104,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario
+            var usuario = await _context.Usuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
@@ -95,7 +122,7 @@ namespace CineORT.Controllers
 
         private bool ValidarUsuario(Usuario usuario)
         {
-            var listaUsuarios = _context.Usuario.ToList();
+            var listaUsuarios = _context.Usuarios.ToList();
             bool encontrado = listaUsuarios
                 .Where(a => a.Email != null)
                 .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
@@ -116,7 +143,7 @@ namespace CineORT.Controllers
                 if (!ValidarUsuario(usuario))
                 {
                     
-                        _context.Usuario.Add(usuario);
+                        _context.Usuarios.Add(usuario);
                         await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
                     
@@ -140,7 +167,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario.FindAsync(id);
+            var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
@@ -163,7 +190,7 @@ namespace CineORT.Controllers
                 {
                 try
                 {
-                        var usuarioBD = _context.Usuario.FirstOrDefault(o => o.Id == usuario.Id);
+                        var usuarioBD = _context.Usuarios.FirstOrDefault(o => o.Id == usuario.Id);
                         usuarioBD.Email = usuario.Email;
                     _context.Update(usuarioBD);
                     await _context.SaveChangesAsync();
@@ -201,7 +228,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario
+            var usuario = await _context.Usuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
@@ -216,15 +243,15 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuario.FindAsync(id);
-            _context.Usuario.Remove(usuario);
+            var usuario = await _context.Usuarios.FindAsync(id);
+            _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UsuarioExists(int id)
         {
-            return _context.Usuario.Any(e => e.Id == id);
+            return _context.Usuarios.Any(e => e.Id == id);
         }
     }
 }
