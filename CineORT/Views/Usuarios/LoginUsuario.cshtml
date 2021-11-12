@@ -14,7 +14,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="LoginUsuario" asp-controller="Usuarios">
+        <form asp-action="LoginUsuario">
             <div class="text-danger">
                 @ViewBag.Error
             </div>
@@ -30,7 +30,11 @@
                 <span asp-validation-for="Contrasenia" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <a asp-action="Create" asp-controller="Reservas"><input type="button" value="Ingresar" class="btn btn-primary" /></a>
+                <input type="button" value="Ingresar" class="btn btn-primary" />
+            </div>
+            <div class="text-light">
+                <p>Si no recuerda su contraseña, por favor comuníquese con Soporte a soporte_usuarios@cineort.com.ar.</p>
+                <p>Si aún no estás registrado, por favor ingresá <a asp-action="Create" asp-controller="Usuarios">aquí</a></p>
             </div>
         </form>
     </div>
