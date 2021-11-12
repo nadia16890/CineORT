@@ -14,7 +14,7 @@ namespace CineORT.Controllers
     {
         private readonly CineDbContext _context;
 
-        private const string _Return_Url = "ReturnUrl";
+       ;
         public UsuariosController(CineDbContext context)
         {
             _context = context;
@@ -26,10 +26,21 @@ namespace CineORT.Controllers
             return View(await _context.Usuarios.ToListAsync());
         }
 
-        [HttpGet]
-        public IActionResult LoginUsuario(string returnUrl)
+
+        private bool ValidarUsuario(Usuario usuario)
         {
-            TempData[_Return_Url] = returnUrl;
+            var listaUsuarios = _context.Usuarios.ToList();
+            bool encontrado = listaUsuarios
+                .Where(a => a.Email != null)
+                .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
+
+            return encontrado;
+        }
+
+        [HttpGet]
+        public IActionResult LoginUsuario()
+        {
+            
             return View();
         }
 
@@ -37,73 +48,21 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario(string Email, string Contrasenia)
+        public IActionResult LoginUsuario([Bind("Email,Contrasea")] Usuario Usuario)
         {
-            string returnUrl = TempData[_Return_Url] as string;
-
-            if (!string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Contrasenia))
+            if (ModelState.IsValid)
             {
-                // if (!ValidarUsuario(usuario))
-                // {
-                //    ViewBag.Error = "Usuario Inexistente";
-                //  }
 
-                //var usuario = ObtenerUsuario(_context, usuario.Email, usuario.Contrasenia);
-                //Usuario usuario1 = ObtenerUsuario(_context, email: usuario1.Email, usuario1.Contrasenia);
-
-                Usuario usuario = null;
-
-                usuario = _context.Usuarios.FirstOrDefault(o => o.Email == Email && Contrasenia == o.Contrasenia);
-
-                //usuario = _context.Usuarios.Find(_context, Email, Contrasenia);
-
-                if (usuario != null && ValidarUsuario(usuario))
+                if (!ValidarUsuario(usuario))
                 {
-                    
-                    // Se crean las credenciales del usuario que serán incorporadas al contexto
-                    ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                    // El lo que luego obtendré al acceder a User.Identity.Name
-                    identity.AddClaim(new Claim(ClaimTypes.Name, usuario.NombreApellido));
-
-                    // Se utilizará para la autorización por roles
-                    identity.AddClaim(new Claim(ClaimTypes.Role, usuario.ToString()));
-
-                    // Lo utilizaremos para acceder al Id del usuario que se encuentra en el sistema.
-                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
-
-                    // Lo utilizaremos cuando querramos mostrar el nombre del usuario logueado en el sistema.
-                    identity.AddClaim(new Claim(ClaimTypes.GivenName, usuario.NombreApellido));
-
-                    //identity.AddClaim(new Claim(nameof(Usuario.Foto), usuario.Foto ?? string.Empty));
-
-                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-
-                    // En este paso se hace el login del usuario al sistema
-                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
-
-                    TempData["LoggedIn"] = true;
-
-                    return Redirect(returnUrl);
-
-
+                    ViewBag.Error = "Administrador Inexistente";
                 }
+
             }
-
-            ViewBag.Error = "Usuario o contraseña incorrectos";
-            ViewBag.Email = Email;
-            TempData[_Return_Url] = returnUrl;
-            return View();
         }
 
 
-        [Authorize]
-             public IActionResult Logout()
-          {
-        
-              return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
-
+       
         // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -128,16 +87,7 @@ namespace CineORT.Controllers
             return View();
         }
 
-        private bool ValidarUsuario(Usuario usuario)
-        {
-            var listaUsuarios = _context.Usuarios.ToList();
-            bool encontrado = listaUsuarios
-                .Where(a => a.Email != null)
-                .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
-
-            return encontrado;
-        }
-
+        
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

@@ -35,7 +35,7 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginAdministradors([Bind("Email,Contraseña")] Administrador administrador)
+        public IActionResult LoginAdministradors([Bind("Email,Contrasenia")] Administrador administrador)
         {
             if (ModelState.IsValid)
             {
