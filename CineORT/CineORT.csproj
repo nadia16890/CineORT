@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\LoginController.cs" />
     <Compile Remove="Views\Usuarios\LogIn.cs" />
     <Compile Remove="Views\Usuarios\LogIn.cshtml.cs" />
   </ItemGroup>

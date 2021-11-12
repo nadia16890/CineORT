@@ -46,7 +46,9 @@ namespace CineORT.Controllers
                 }
 
             }
-            return View(administrador);
+
+            return RedirectToAction(nameof(AdministradorsController.MenuPrincipalAdministrador), "Menú Principal Administrador");
+            //return View(administrador);
 
         }
             // GET: Administradors/Details/5
