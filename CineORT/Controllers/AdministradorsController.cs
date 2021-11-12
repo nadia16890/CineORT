@@ -18,6 +18,8 @@ namespace CineORT.Controllers
             _context = context;
         }
 
+
+        [HttpGet]
         public IActionResult MenuPrincipalAdministrador()
         {
             return View();
@@ -47,8 +49,8 @@ namespace CineORT.Controllers
 
             }
 
-            return RedirectToAction(nameof(AdministradorsController.MenuPrincipalAdministrador), "Menú Principal Administrador");
-            //return View(administrador);
+          
+            return View(administrador);
 
         }
             // GET: Administradors/Details/5

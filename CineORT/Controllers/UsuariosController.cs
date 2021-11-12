@@ -3,10 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+
 
 namespace CineORT.Controllers
 {
@@ -48,7 +45,7 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario(Usuario usuario)
+        public IActionResult LoginUsuario([Bind("Email,Contrasenia")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {

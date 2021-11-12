@@ -21,7 +21,7 @@ namespace CineORT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddControllersWithViews();
 
             services.AddDbContext<CineDbContext>(options => options.UseSqlite(@"filename=C:\Temporal\Usuarios.db"));

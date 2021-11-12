@@ -12,8 +12,7 @@ namespace CineORT.Models
     [Table ("Administrador")]
     public class Administrador
     {
-
-       
+      
         [Key]
         public int Id { get; set; }
 
