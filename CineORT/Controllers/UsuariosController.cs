@@ -33,30 +33,33 @@ namespace CineORT.Controllers
             return View();
         }
 
-        private Usuario ObtenerUsuario(CineDbContext _context, string email, string password)
-         {
-
-        Usuario usuario = _context.Usuarios.FirstOrDefault(o => o.Email.ToUpper() == email.ToUpper() && password == o.Contrasenia);
-         
-        return usuario;
-         }
+        
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario(string email, string password)
+        [ValidateAntiForgeryToken]
+        public IActionResult LoginUsuario(string Email, string Contrasenia)
         {
             string returnUrl = TempData[_Return_Url] as string;
 
-            if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+            if (!string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Contrasenia))
             {
                 // if (!ValidarUsuario(usuario))
                 // {
-                //   ViewBag.Error = "Usuario Inexistente";
-                // }
+                //    ViewBag.Error = "Usuario Inexistente";
+                //  }
 
-                var usuario = ObtenerUsuario(_context, email, password);
-                if (usuario != null)
+                //var usuario = ObtenerUsuario(_context, usuario.Email, usuario.Contrasenia);
+                //Usuario usuario1 = ObtenerUsuario(_context, email: usuario1.Email, usuario1.Contrasenia);
+
+                Usuario usuario = null;
+
+                usuario = _context.Usuarios.FirstOrDefault(o => o.Email == Email && Contrasenia == o.Contrasenia);
+
+                //usuario = _context.Usuarios.Find(_context, Email, Contrasenia);
+
+                if (usuario != null && ValidarUsuario(usuario))
                 {
+                    
                     // Se crean las credenciales del usuario que serán incorporadas al contexto
                     ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -86,7 +89,10 @@ namespace CineORT.Controllers
 
                 }
             }
-            
+
+            ViewBag.Error = "Usuario o contraseña incorrectos";
+            ViewBag.Email = Email;
+            TempData[_Return_Url] = returnUrl;
             return View();
         }
 

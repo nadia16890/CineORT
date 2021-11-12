@@ -63,9 +63,11 @@ namespace CineORT
 
         public static void ConfiguracionCookie(CookieAuthenticationOptions opciones)
         {
-            opciones.LoginPath = "/Login/Login";
+            opciones.LoginPath = "/Usuarios/LoginUsuario";
+            opciones.LoginPath = "/Administradors/LoginAdministradors";
             opciones.AccessDeniedPath = "/Login/NoAutorizado";
             opciones.LogoutPath = "/Login/Logout";
+            opciones.ExpireTimeSpan = System.TimeSpan.FromMinutes(5);
         }
     }
 }
