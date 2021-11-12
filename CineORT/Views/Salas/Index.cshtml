@@ -10,13 +10,15 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table text-light">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.id)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.CantidadLugares)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +26,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CantidadLugares)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |

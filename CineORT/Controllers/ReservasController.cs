@@ -23,6 +23,11 @@ namespace CineORT.Controllers
         // GET: Reservas
         public async Task<IActionResult> Index()
         {
+            using (Funcion f = new Funcion())
+            {
+
+            }
+
             return View(await _context.Reserva.ToListAsync());
         }
 
@@ -55,7 +60,7 @@ namespace CineORT.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Reserva reserva)
+        public async Task<IActionResult> Create([Bind("Id,IdUsuario,IdFuncion,CantidadEntradas")] Reserva reserva)
         {
             if (ModelState.IsValid)
             {

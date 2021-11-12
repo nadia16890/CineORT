@@ -53,7 +53,7 @@ namespace CineORT.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,numero")] Salas salas)
+        public async Task<IActionResult> Create([Bind("id,CantidadLugares")] Salas salas)
         {
             if (ModelState.IsValid)
             {

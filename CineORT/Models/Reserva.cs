@@ -10,7 +10,9 @@ namespace CineORT.Models
     {
         [Key]
         public int Id { get; set; }
-        public Usuario Usuario { get; set; }
-        public Funcion Funcion { get; set; }
+        public int IdUsuario { get; set; }
+        public int IdFuncion { get; set; }
+
+        public int CantidadEntradas { get; set; }
     }
 }
