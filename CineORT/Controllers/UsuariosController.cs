@@ -46,43 +46,45 @@ namespace CineORT.Controllers
         public IActionResult LoginUsuario(string email, string password)
         {
             string returnUrl = TempData[_Return_Url] as string;
-            
 
-               // if (!ValidarUsuario(usuario))
-               // {
-                 //   ViewBag.Error = "Usuario Inexistente";
-               // }
+            if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+            {
+                // if (!ValidarUsuario(usuario))
+                // {
+                //   ViewBag.Error = "Usuario Inexistente";
+                // }
 
                 var usuario = ObtenerUsuario(_context, email, password);
                 if (usuario != null)
                 {
-                 // Se crean las credenciales del usuario que serán incorporadas al contexto
-                ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    // Se crean las credenciales del usuario que serán incorporadas al contexto
+                    ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
-                // El lo que luego obtendré al acceder a User.Identity.Name
-                identity.AddClaim(new Claim(ClaimTypes.Name, usuario.NombreApellido));
+                    // El lo que luego obtendré al acceder a User.Identity.Name
+                    identity.AddClaim(new Claim(ClaimTypes.Name, usuario.NombreApellido));
 
-                // Se utilizará para la autorización por roles
-                identity.AddClaim(new Claim(ClaimTypes.Role, usuario.ToString()));
+                    // Se utilizará para la autorización por roles
+                    identity.AddClaim(new Claim(ClaimTypes.Role, usuario.ToString()));
 
-                // Lo utilizaremos para acceder al Id del usuario que se encuentra en el sistema.
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
+                    // Lo utilizaremos para acceder al Id del usuario que se encuentra en el sistema.
+                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
 
-                // Lo utilizaremos cuando querramos mostrar el nombre del usuario logueado en el sistema.
-                identity.AddClaim(new Claim(ClaimTypes.GivenName, usuario.NombreApellido));
+                    // Lo utilizaremos cuando querramos mostrar el nombre del usuario logueado en el sistema.
+                    identity.AddClaim(new Claim(ClaimTypes.GivenName, usuario.NombreApellido));
 
-                //identity.AddClaim(new Claim(nameof(Usuario.Foto), usuario.Foto ?? string.Empty));
+                    //identity.AddClaim(new Claim(nameof(Usuario.Foto), usuario.Foto ?? string.Empty));
 
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
-                // En este paso se hace el login del usuario al sistema
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
+                    // En este paso se hace el login del usuario al sistema
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
 
-                TempData["LoggedIn"] = true;
+                    TempData["LoggedIn"] = true;
 
                     return Redirect(returnUrl);
 
-                    
+
+                }
             }
             
             return View();

@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CineORT.Controllers
 {
+    [Authorize]
     public class ReservasController : Controller
     {
         private readonly CineDbContext _context;
