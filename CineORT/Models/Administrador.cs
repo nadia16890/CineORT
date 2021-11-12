@@ -10,18 +10,18 @@ namespace CineORT.Models
 {
 
     [Table ("Administrador")]
-    public class Administrador : Usuario
+    public class Administrador
     {
 
-        public override TipoUsuario TipoUsuario => TipoUsuario.Administrador;
-        // [Key]
-        // public int Id { get; set; }
+       
+        [Key]
+        public int Id { get; set; }
 
-        // [Required]
-        //public string Email { get; set; }
+        [Required]
+        public string Email { get; set; }
 
-        // [Required]
-        // public string Contrasenia { get; set; }
+         [Required]
+        public string Contrasenia { get; set; }
 
     }
 }

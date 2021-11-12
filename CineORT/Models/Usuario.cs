@@ -22,7 +22,7 @@ namespace CineORT.Models
         [Required]
         public string Contrasenia { get; set; }
 
-        public abstract TipoUsuario TipoUsuario { get; }
+      
 
     }
 }

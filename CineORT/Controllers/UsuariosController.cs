@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CineORT.Controllers
 {
@@ -18,7 +21,7 @@ namespace CineORT.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cliente.ToListAsync());
+            return View(await _context.Usuario.ToListAsync());
         }
 
         public IActionResult LoginUsuario()
@@ -28,7 +31,7 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario(Cliente usuario)
+        public IActionResult LoginUsuario(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -37,7 +40,32 @@ namespace CineORT.Controllers
                 {
                     ViewBag.Error = "Usuario Inexistente";
                 }
-                
+
+                // Se crean las credenciales del usuario que serán incorporadas al contexto
+                ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // El lo que luego obtendré al acceder a User.Identity.Name
+                identity.AddClaim(new Claim(ClaimTypes.Name, usuario.NombreApellido));
+
+                // Se utilizará para la autorización por roles
+                identity.AddClaim(new Claim(ClaimTypes.Role, usuario.ToString()));
+
+                // Lo utilizaremos para acceder al Id del usuario que se encuentra en el sistema.
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
+
+                // Lo utilizaremos cuando querramos mostrar el nombre del usuario logueado en el sistema.
+                identity.AddClaim(new Claim(ClaimTypes.GivenName, usuario.NombreApellido));
+
+                //identity.AddClaim(new Claim(nameof(Usuario.Foto), usuario.Foto ?? string.Empty));
+
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+                // En este paso se hace el login del usuario al sistema
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
+
+                TempData["LoggedIn"] = true;
+
+                return RedirectToAction(nameof(ReservasController.Create), "Reservar");
             }
             return View(usuario);
         }
@@ -49,7 +77,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Cliente
+            var usuario = await _context.Usuario
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
@@ -65,9 +93,9 @@ namespace CineORT.Controllers
             return View();
         }
 
-        private bool ValidarUsuario(Cliente usuario)
+        private bool ValidarUsuario(Usuario usuario)
         {
-            var listaUsuarios = _context.Cliente.ToList();
+            var listaUsuarios = _context.Usuario.ToList();
             bool encontrado = listaUsuarios
                 .Where(a => a.Email != null)
                 .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
@@ -80,7 +108,7 @@ namespace CineORT.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Cliente usuario)
+        public async Task<IActionResult> Create(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +116,7 @@ namespace CineORT.Controllers
                 if (!ValidarUsuario(usuario))
                 {
                     
-                        _context.Cliente.Add(usuario);
+                        _context.Usuario.Add(usuario);
                         await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
                     
@@ -112,7 +140,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Cliente.FindAsync(id);
+            var usuario = await _context.Usuario.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
@@ -125,7 +153,7 @@ namespace CineORT.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Cliente usuario)
+        public async Task<IActionResult> Edit(int id, Usuario usuario)
         {
             
 
@@ -135,7 +163,7 @@ namespace CineORT.Controllers
                 {
                 try
                 {
-                        var usuarioBD = _context.Cliente.FirstOrDefault(o => o.Id == usuario.Id);
+                        var usuarioBD = _context.Usuario.FirstOrDefault(o => o.Id == usuario.Id);
                         usuarioBD.Email = usuario.Email;
                     _context.Update(usuarioBD);
                     await _context.SaveChangesAsync();
@@ -173,7 +201,7 @@ namespace CineORT.Controllers
                 return NotFound();
             }
 
-            var usuario = await _context.Cliente
+            var usuario = await _context.Usuario
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
@@ -188,15 +216,15 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Cliente.FindAsync(id);
-            _context.Cliente.Remove(usuario);
+            var usuario = await _context.Usuario.FindAsync(id);
+            _context.Usuario.Remove(usuario);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UsuarioExists(int id)
         {
-            return _context.Cliente.Any(e => e.Id == id);
+            return _context.Usuario.Any(e => e.Id == id);
         }
     }
 }
