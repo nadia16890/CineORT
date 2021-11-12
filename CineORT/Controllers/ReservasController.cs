@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CineORT.Controllers
 {
-    [Authorize]
+  
     public class ReservasController : Controller
     {
         private readonly CineDbContext _context;

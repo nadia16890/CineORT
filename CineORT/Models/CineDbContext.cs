@@ -14,20 +14,20 @@ namespace CineORT.Models
             public CineDbContext(DbContextOptions opciones) : base(opciones)
             {
 
-            }
+        }
 
         
-        public DbSet<CineORT.Models.Usuario> Usuarios { get; set; }
+        public DbSet<Usuario> Usuarios{ get; set; }
 
-        public DbSet<CineORT.Models.Administrador> Administrador { get; set; }
+        public DbSet<Administrador> Administrador { get; set; }
 
-        public DbSet<CineORT.Models.Reserva> Reserva { get; set; }
+        public DbSet<Reserva> Reserva { get; set; }
 
-        public DbSet<CineORT.Models.Pelicula> Pelicula { get; set; }
+        public DbSet<Pelicula> Pelicula { get; set; }
 
-        public DbSet<CineORT.Models.Funcion> Funcion { get; set; }
+        public DbSet<Funcion> Funcion { get; set; }
 
-        public DbSet<CineORT.Models.Salas> Salas { get; set; }
+        public DbSet<Salas> Salas { get; set; }
 
 
     }

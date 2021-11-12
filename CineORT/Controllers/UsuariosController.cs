@@ -14,7 +14,7 @@ namespace CineORT.Controllers
     {
         private readonly CineDbContext _context;
 
-       ;
+       
         public UsuariosController(CineDbContext context)
         {
             _context = context;
@@ -48,7 +48,7 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario([Bind("Email,Contrasea")] Usuario Usuario)
+        public IActionResult LoginUsuario(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -59,6 +59,8 @@ namespace CineORT.Controllers
                 }
 
             }
+
+            return View();
         }
 
 

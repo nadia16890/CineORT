@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CineORT.Models
 {
-    
+    [Table("Usuarios")]
     public abstract class Usuario
     {
         [Key]
