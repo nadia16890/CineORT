@@ -98,7 +98,7 @@ namespace CineORT.Controllers
 
 
             }
-            ViewBag.Error = "Administrador Inexistente";
+            ViewBag.Error = "Usuario Inexistente";
             return View();
         }
 
