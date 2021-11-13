@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "ElegirPelicula";
+}
+
+<h1>ElegirPelicula</h1>
+<form asp-action="ElegirFuncion" method="get">
+    <select name="IdPelicula"
+            class="form-control"
+            asp-items="ViewBag.Peliculas"></select>
+
+    <input type="submit" value="Elgir Pelicula" />
+</form>

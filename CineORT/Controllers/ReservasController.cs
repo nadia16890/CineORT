@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CineORT.Controllers
 {
@@ -43,6 +44,33 @@ namespace CineORT.Controllers
 
             return View(reserva);
         }
+
+        public IActionResult ElegirPelicula()
+        {
+            ViewBag.Peliculas = new SelectList(_context.Pelicula, "Id", "Nombre");
+            return View();
+        }
+
+        public IActionResult ElegirFuncion(int idPelicula)
+        {
+            var listaFunciones = _context.Funcion.Where(o=>o.PeliculaId == idPelicula).ToList();
+            return View(listaFunciones);
+        }
+        [HttpPost]
+        public IActionResult ElegirFuncion(int idFuncion, int cantidad)
+        {
+            int idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            _context.Reserva.Add(
+                new Reserva()
+                {
+                    IdFuncion = idFuncion,
+                    IdUsuario = idUsuario
+                }
+                );
+            return View();
+        }
+
+
 
         // GET: Reservas/Create
         public IActionResult Create()

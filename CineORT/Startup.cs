@@ -21,7 +21,7 @@ namespace CineORT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(ConfigurarcionCookie);
             services.AddControllersWithViews();
 
             services.AddDbContext<CineDbContext>(options => options.UseSqlite(@"filename=C:\Temporal\Usuarios.db"));
@@ -54,9 +54,16 @@ namespace CineORT
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            
+            app.UseCookiePolicy();
         }
 
-        
+        public static void ConfigurarcionCookie(CookieAuthenticationOptions opciones)
+        {
+            opciones.LoginPath = "/Usuarios/LoginUsuario";
+            opciones.AccessDeniedPath = "/Login/NoAutorizado";
+            opciones.LogoutPath = "/Login/Logout";
+            opciones.ExpireTimeSpan = System.TimeSpan.FromMinutes(10);
+        }
+
     }
 }

@@ -11,7 +11,9 @@ namespace CineORT.Models
     {
         [Key]
         public int Id { get; set; }
-                       
+
+        public int PeliculaId { get; set; }
+
         public string Fecha { get; set; }
 
         public string Horario { get; set; }

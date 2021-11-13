@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
-
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CineORT.Controllers
 {
@@ -24,14 +26,12 @@ namespace CineORT.Controllers
         }
 
 
-        private bool ValidarUsuario(Usuario usuario)
+        private Usuario ValidarUsuario(string email, string contrasenia)
         {
-            var listaUsuarios = _context.Usuarios.ToList();
-            bool encontrado = listaUsuarios
-                .Where(a => a.Email != null)
-                .Any(usu => usu.Email.Equals(usuario.Email, System.StringComparison.OrdinalIgnoreCase) && usu.Id != usuario.Id);
-
-            return encontrado;
+            var usuario = _context.Usuarios
+                .Where(usu => usu.Email == email &&
+                             usu.Contrasenia == contrasenia).FirstOrDefault();
+            return usuario;
         }
 
         [HttpGet]
@@ -47,16 +47,58 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult LoginUsuario([Bind("Email,Contrasenia")] Usuario usuario)
         {
-            if (ModelState.IsValid)
-            {
-
-                if (!ValidarUsuario(usuario))
+                Usuario usuaarioBD = this.ValidarUsuario(usuario.Email, usuario.Contrasenia);
+                if (usuaarioBD != null)
                 {
-                    ViewBag.Error = "Administrador Inexistente";
+                    // Se crean las credenciales del usuario que serán incorporadas al contexto
+                    ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    // El lo que luego obtendré al acceder a User.Identity.Name
+                    identity.AddClaim(new Claim(ClaimTypes.Name, usuario.Email));
+
+                // Se utilizará para la autorización por roles
+                if (usuaarioBD.Email == "administrador@administrador.com")
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "ADMIN"));
                 }
+                else
+                {
+                    identity.AddClaim(new Claim(ClaimTypes.Role, "USU"));
+                }
+                    
+
+                    // Lo utilizaremos para acceder al Id del usuario que se encuentra en el sistema.
+                    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuaarioBD.Id.ToString()));
+
+                    // Lo utilizaremos cuando querramos mostrar el nombre del usuario logueado en el sistema.
+                    //identity.AddClaim(new Claim(ClaimTypes.GivenName, usuario.NombreApellido));
+
+                    //identity.AddClaim(new Claim(nameof(Usuario.Foto), usuario.Foto ?? string.Empty));
+
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+                    // En este paso se hace el login del usuario al sistema
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
+
+                    TempData["LoggedIn"] = true;
+
+                    //if (!string.IsNullOrWhiteSpace(returnUrl))
+                    //    return Redirect(returnUrl);
+
+                    //if (rol == Rol.Jugador)
+                    //{
+                    //    return RedirectToAction(nameof(PartidosController.Confirmacion), "Partidos");
+                    //}
+                    //else
+                    //{
+                    //    return RedirectToAction(nameof(HomeController.Index), "Home");
+                    //}
+
+                    return RedirectToAction(nameof(ReservasController.Create), "Reservas");
+
 
             }
-
+            ViewBag.Error = "Administrador Inexistente";
             return View();
         }
 
@@ -97,7 +139,7 @@ namespace CineORT.Controllers
             if (ModelState.IsValid)
             {
                 
-                if (!ValidarUsuario(usuario))
+                if (this.ValidarUsuario(usuario.Email, usuario.Contrasenia) != null)
                 {                 
                         _context.Usuarios.Add(usuario);
                         await _context.SaveChangesAsync();
@@ -137,33 +179,33 @@ namespace CineORT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Usuario usuario)
         {
-            
+
 
             if (ModelState.IsValid)
             {
-                if (!ValidarUsuario(usuario))
+                if (this.ValidarUsuario(usuario.Email, usuario.Contrasenia) != null)
                 {
-                try
-                {
+                    try
+                    {
                         var usuarioBD = _context.Usuarios.FirstOrDefault(o => o.Id == usuario.Id);
                         usuarioBD.Email = usuario.Email;
-                    _context.Update(usuarioBD);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(usuario.Id))
-                    {
-                        return NotFound();
+                        _context.Update(usuarioBD);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
+                        if (!UsuarioExists(usuario.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
 
 
-                        throw;
+                            throw;
+                        }
                     }
-                }
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
 
                 }
                 else
