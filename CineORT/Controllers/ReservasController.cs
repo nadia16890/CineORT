@@ -23,11 +23,6 @@ namespace CineORT.Controllers
         // GET: Reservas
         public async Task<IActionResult> Index()
         {
-            using (Funcion f = new Funcion())
-            {
-
-            }
-
             return View(await _context.Reserva.ToListAsync());
         }
 
