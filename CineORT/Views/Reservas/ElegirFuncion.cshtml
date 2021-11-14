@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "ElegirFuncion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ElegirFuncion</h1>
+
+<form asp-action="ElegirFuncion" method="post">
+<select name="IdFuncion"
+        class="form-control"
+        asp-items="ViewBag.Funciones"></select>
+
+<input type="submit" value="Elegir Función" />
+</form>
