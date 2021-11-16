@@ -53,8 +53,11 @@ namespace CineORT.Controllers
 
         public IActionResult ElegirFuncion(int idPelicula)
         {
-            var listaFunciones = _context.Funcion.Where(o=>o.PeliculaId == idPelicula).ToList();
-            return View(listaFunciones);
+            //var listaFunciones = _context.Funcion.Where(o=>o.PeliculaId == idPelicula).ToList();
+
+            ViewBag.Funciones = new SelectList(_context.Funcion.Where(o => o.PeliculaId == idPelicula).ToList());
+
+            return View();
         }
         [HttpPost]
         public IActionResult ElegirFuncion(int idFuncion, int cantidad)

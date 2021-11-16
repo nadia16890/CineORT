@@ -57,7 +57,7 @@ namespace CineORT.Controllers
                     identity.AddClaim(new Claim(ClaimTypes.Name, usuario.Email));
 
                 // Se utilizará para la autorización por roles
-                if (usuaarioBD.Email == "administrador@administrador.com")
+                if (usuaarioBD.Email == "administrador@cineort.com.ar")
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, "ADMIN"));
                 }
@@ -94,8 +94,15 @@ namespace CineORT.Controllers
                     //    return RedirectToAction(nameof(HomeController.Index), "Home");
                     //}
 
+                if(usuaarioBD.Email == "administrador@cineort.com.ar")
+                {
+                    return RedirectToAction(nameof(AdministradorsController.MenuPrincipalAdministrador), "Menú Principal");
+                }
+                else
+                {
                     return RedirectToAction(nameof(ReservasController.Create), "Reservas");
-
+                }
+                    
 
             }
             ViewBag.Error = "Usuario Inexistente";
