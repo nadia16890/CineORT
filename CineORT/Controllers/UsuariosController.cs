@@ -124,6 +124,7 @@ namespace CineORT.Controllers
             return View();
         }
 
+
         
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -135,11 +136,11 @@ namespace CineORT.Controllers
             if (ModelState.IsValid)
             {
                 
-                if (this.ValidarUsuario(usuario.Email, usuario.Contrasenia) != null)
+                if (ValidarUsuario(usuario.Email, usuario.Contrasenia) == null)
                 {                 
                         _context.Usuarios.Add(usuario);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(ReservasController.Create));
+                        return RedirectToAction(nameof(HomeController.Index));
 
                 }
                 else
@@ -149,7 +150,7 @@ namespace CineORT.Controllers
                 }
                 
             }
-            return View();
+            return RedirectToAction(nameof(HomeController.Index), "Index");
         }
 
         // GET: Usuarios/Edit/5
