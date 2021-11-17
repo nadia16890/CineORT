@@ -140,7 +140,7 @@ namespace CineORT.Controllers
                 {                 
                         _context.Usuarios.Add(usuario);
                         await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(HomeController.Index));
+                        return RedirectToAction(nameof(HomeController.Index), "Home");
 
                 }
                 else
@@ -150,7 +150,7 @@ namespace CineORT.Controllers
                 }
                 
             }
-            return RedirectToAction(nameof(HomeController.Index), "Index");
+            return View();
         }
 
         // GET: Usuarios/Edit/5
