@@ -51,11 +51,14 @@ namespace CineORT.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult ElegirFuncion(int idPelicula)
         {
             //var listaFunciones = _context.Funcion.Where(o=>o.PeliculaId == idPelicula).ToList();
 
-            ViewBag.Funciones = new SelectList(_context.Funcion.Where(o => o.PeliculaId == idPelicula).ToList());
+            ViewBag.Funciones = new SelectList(_context.Funcion.Where(o => o.PeliculaId == idPelicula).ToList(), "Id", "Fecha");
+            ViewBag.Funciones2 = new SelectList(_context.Funcion.Where(o => o.PeliculaId == idPelicula).ToList(), "Id", "Horario");
+           
 
             return View();
         }
@@ -63,14 +66,18 @@ namespace CineORT.Controllers
         public IActionResult ElegirFuncion(int idFuncion, int cantidad)
         {
             int idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             _context.Reserva.Add(
                 new Reserva()
                 {
                     IdFuncion = idFuncion,
-                    IdUsuario = idUsuario
+                    IdUsuario = idUsuario,
+                   
                 }
                 );
-            return View();
+            ViewBag.Alert = "¡Su reserva ha sido confirmada!";
+
+            return RedirectToAction(nameof(HomeController.Index), "Index");
         }
 
 

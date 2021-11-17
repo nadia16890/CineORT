@@ -19,7 +19,7 @@ namespace CineORT.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult MenuPrincipalAdministrador()
         {
             return View();

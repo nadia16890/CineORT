@@ -6,10 +6,21 @@
 
 <h1>ElegirFuncion</h1>
 
-<form asp-action="ElegirFuncion" method="post">
-<select name="IdFuncion"
-        class="form-control"
-        asp-items="ViewBag.Funciones"></select>
+<form asp-action="ElegirFuncion">
+    <select name="IdFuncion"
+            class="form-control"
+            asp-items="@ViewBag.Funciones"></select>
+    <hr />
+    <select name="IdFuncion"
+            class="form-control"
+            asp-items="@ViewBag.Funciones2"></select>
 
-<input type="submit" value="Elegir Función" />
+    <input type="submit" value="Elegir Función" />
 </form>
+
+@if (ViewBag.Alert != null)
+{
+    <script>
+    alert("@ViewBag.Alert");
+    </script>
+}

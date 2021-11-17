@@ -82,25 +82,14 @@ namespace CineORT.Controllers
 
                     TempData["LoggedIn"] = true;
 
-                    //if (!string.IsNullOrWhiteSpace(returnUrl))
-                    //    return Redirect(returnUrl);
-
-                    //if (rol == Rol.Jugador)
-                    //{
-                    //    return RedirectToAction(nameof(PartidosController.Confirmacion), "Partidos");
-                    //}
-                    //else
-                    //{
-                    //    return RedirectToAction(nameof(HomeController.Index), "Home");
-                    //}
-
+                   
                 if(usuaarioBD.Email == "administrador@cineort.com.ar")
                 {
-                    return RedirectToAction(nameof(AdministradorsController.MenuPrincipalAdministrador), "Menú Principal");
+                    return RedirectToAction(nameof(AdministradorsController.MenuPrincipalAdministrador), "Administradors");
                 }
                 else
                 {
-                    return RedirectToAction(nameof(ReservasController.Create), "Reservas");
+                    return RedirectToAction(nameof(ReservasController.ElegirPelicula), "Reservas");
                 }
                     
 
