@@ -65,7 +65,8 @@ namespace CineORT.Controllers
         [HttpPost]
         public IActionResult ElegirFuncion(int idFuncion, int cantidad)
         {
-            int idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //int idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             _context.Reserva.Add(
                 new Reserva()
@@ -78,6 +79,7 @@ namespace CineORT.Controllers
             ViewBag.Alert = "¡Su reserva ha sido confirmada!";
 
             return RedirectToAction(nameof(HomeController.Index), "Index");
+
         }
 
 
