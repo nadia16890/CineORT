@@ -2,10 +2,12 @@ using CineORT.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
 
 namespace CineORT
 {
@@ -25,7 +27,14 @@ namespace CineORT
             services.AddControllersWithViews();
 
             services.AddDbContext<CineDbContext>(options => options.UseSqlite(@"filename=C:\Temporal\Usuarios.db"));
+            services.Configure<IdentityOptions>(options => options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = System.TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
 
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +55,7 @@ namespace CineORT
 
             app.UseRouting();
 
+            app.UseSession();
            
             app.UseEndpoints(endpoints =>
             {
@@ -55,6 +65,8 @@ namespace CineORT
             });
 
             app.UseCookiePolicy();
+            app.UseAuthentication();
+            //app.UseAuthorization();
         }
 
         public static void ConfigurarcionCookie(CookieAuthenticationOptions opciones)

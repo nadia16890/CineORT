@@ -53,6 +53,7 @@ namespace CineORT.Controllers
             return View(administrador);
 
         }
+
             // GET: Administradors/Details/5
             public async Task<IActionResult> Details(int? id)
         {

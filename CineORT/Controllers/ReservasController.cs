@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CineORT.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace CineORT.Controllers
 {
@@ -58,15 +59,22 @@ namespace CineORT.Controllers
 
             ViewBag.Funciones = new SelectList(_context.Funcion.Where(o => o.PeliculaId == idPelicula).ToList(), "Id", "Fecha");
             ViewBag.Funciones2 = new SelectList(_context.Funcion.Where(o => o.PeliculaId == idPelicula).ToList(), "Id", "Horario");
-           
+            
 
             return View();
         }
+
+       
+
+        
+
         [HttpPost]
         public IActionResult ElegirFuncion(int idFuncion, int cantidad)
         {
-            //int idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            //string idUsuario = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //int numIdUsuario = Int32.Parse(idUsuario);
+
+            int idUsuario = Int32.Parse(HttpContext.Session.GetString("IdUsuario"));
 
             _context.Reserva.Add(
                 new Reserva()

@@ -6,6 +6,7 @@ using CineORT.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 
 namespace CineORT.Controllers
 {
@@ -28,9 +29,7 @@ namespace CineORT.Controllers
 
         private Usuario ValidarUsuario(string email, string contrasenia)
         {
-            var usuario = _context.Usuarios
-                .Where(usu => usu.Email == email &&
-                             usu.Contrasenia == contrasenia).FirstOrDefault();
+            var usuario = _context.Usuarios.FirstOrDefault(usu => usu.Email == email && usu.Contrasenia == contrasenia);
             return usuario;
         }
 
@@ -45,16 +44,18 @@ namespace CineORT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUsuario([Bind("Email,Contrasenia")] Usuario usuario)
+        public IActionResult LoginUsuario(string email, string contrasenia)
         {
-                Usuario usuaarioBD = this.ValidarUsuario(usuario.Email, usuario.Contrasenia);
+                Usuario usuaarioBD = this.ValidarUsuario(email, contrasenia);
+            
                 if (usuaarioBD != null)
                 {
+                
                     // Se crean las credenciales del usuario que serán incorporadas al contexto
                     ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
                     // El lo que luego obtendré al acceder a User.Identity.Name
-                    identity.AddClaim(new Claim(ClaimTypes.Name, usuario.Email));
+                    identity.AddClaim(new Claim(ClaimTypes.Name, usuaarioBD.Email));
 
                 // Se utilizará para la autorización por roles
                 if (usuaarioBD.Email == "administrador@cineort.com.ar")
@@ -80,7 +81,9 @@ namespace CineORT.Controllers
                     // En este paso se hace el login del usuario al sistema
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
 
-                    TempData["LoggedIn"] = true;
+                HttpContext.Session.SetString("IdUsuario", usuaarioBD.Id.ToString());
+
+                TempData["LoggedIn"] = true;
 
                    
                 if(usuaarioBD.Email == "administrador@cineort.com.ar")
